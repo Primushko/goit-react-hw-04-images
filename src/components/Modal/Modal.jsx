@@ -1,41 +1,72 @@
-import { Component } from 'react';
+import { useEffect } from 'react';
+import PropTypes from 'prop-types';
+// import { Component } from 'react';
 import { Overlay, ModalContent } from './Modal.module';
 
-export class Modal extends Component {
-  componentDidMount() {
-    // метод додає обробник події keydown на вікні браузера.
-    window.addEventListener('keydown', this.handleKeydown);
-  }
+export const Modal = ({ largeImageURL, alt, onCloseModal }) => {
+  useEffect(() => {
+    const handleKeydown = e => {
+      if (e.code === 'Escape') {
+        onCloseModal();
+      }
+    };
 
-  componentWillUnmount() {
-    // метод видаляє обробник події keydown на вікні браузера.
-    window.removeEventListener('keydown', this.handleKeydown);
-  }
+    window.addEventListener('keydown', handleKeydown);
+    return () => {
+      window.removeEventListener('keydown', handleKeydown);
+    };
+  }, [onCloseModal]);
 
-  handleKeydown = e => {
-    // У разі натискання клавіші Escape, викликається функція onCloseModal яка передається як пропс.
-    if (e.code === 'Escape') {
-      this.props.onCloseModal();
-    }
-  };
-
-  handleBackdropClick = ({ target, currentTarget }) => {
-    //обробляє клік на задньому фоні модального вікна.
+  const handleBackdropClick = ({ target, currentTarget }) => {
     if (currentTarget === target) {
-      this.props.onCloseModal();
+      onCloseModal();
     }
   };
 
-  render() {
-    // Метод render відображає компонент Modal з обгорткою Overlay та вміщуємим вмістом ModalContent.
-    const { largeImageURL, alt } = this.props;
-    return (
-      <Overlay className="overlay" onClick={this.handleBackdropClick}>
-        <ModalContent className="modal">
-          <img src={largeImageURL} alt={alt} />
-          {/* Зображення відображається за допомогою тегу <img> з властивостями src та alt */}
-        </ModalContent>
-      </Overlay>
-    );
-  }
-}
+  return (
+    <Overlay className="overlay" onClick={handleBackdropClick}>
+      <ModalContent className="modal">
+        <img src={largeImageURL} alt={alt} />
+      </ModalContent>
+    </Overlay>
+  );
+};
+
+Modal.propTypes = {
+  largeImageURL: PropTypes.string.isRequired,
+  alt: PropTypes.string,
+  onCloseModal: PropTypes.func.isRequired,
+};
+// export class Modal extends Component {
+//   componentDidMount() {
+//     window.addEventListener('keydown', this.handleKeydown);
+//   }
+
+//   componentWillUnmount() {
+//     window.removeEventListener('keydown', this.handleKeydown);
+//   }
+
+//   handleKeydown = e => {
+//     if (e.code === 'Escape') {
+//       this.props.onCloseModal();
+//     }
+//   };
+
+//   handleBackdropClick = ({ target, currentTarget }) => {
+//     if (currentTarget === target) {
+//       this.props.onCloseModal();
+//     }
+//   };
+
+//   render() {
+//     const { largeImageURL, alt } = this.props;
+
+//     return (
+//       <Overlay className="overlay" onClick={this.handleBackdropClick}>
+//         <ModalContent className="modal">
+//           <img src={largeImageURL} alt={alt} />
+//         </ModalContent>
+//       </Overlay>
+//     );
+//   }
+// }
