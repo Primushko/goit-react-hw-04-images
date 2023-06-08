@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { ImageGalleryItem } from '../ImageGalleryItem/ImageGalleryItem';
 import { Gallery } from './ImageGallery.module';
 // компонент `ImageGallery`приймає масив об'єктів `galleryItems` та відображає галерею зображень,
@@ -16,3 +17,6 @@ export const ImageGallery = ({ galleryItems }) => {
 // метод `map`створює компонент `ImageGalleryItem` для кожного об'єкта `galleryItem` в масиві.
 // Кожен елемент отримує унікальний ключ `key` на основі `id` об'єкта `galleryItem`,
 //  і передається сам об'єкт `galleryItem` через проп `galleryItem`.
+ImageGallery.propTypes = {
+  galleryItems: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+};
